@@ -1,5 +1,6 @@
 package org.sopt;
 
+import org.sopt.classes.Part;
 import org.sopt.classes.Person;
 import org.sopt.classes.PersonBuilder;
 
@@ -15,5 +16,7 @@ public class Main {
                 .age(26)
                 .sex("male")
                 .build();
+
+        System.out.println(Part.IOS.name());
     }
 }
