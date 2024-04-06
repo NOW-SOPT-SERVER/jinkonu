@@ -3,11 +3,9 @@ package org.sopt.controller;
 import lombok.RequiredArgsConstructor;
 import org.sopt.service.MemberService;
 import org.sopt.service.dto.MemberCreateDto;
+import org.sopt.service.dto.MemberFindDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
@@ -25,5 +23,24 @@ public class MemberController {
         return ResponseEntity.created(
                 URI.create(memberService.createMember(memberCreate))
         ).build();
+    }
+
+    @GetMapping("/{memberId}")
+    public ResponseEntity<MemberFindDto> findMemberById(
+            @PathVariable("memberId") Long id
+    ) {
+        return ResponseEntity.ok(
+                memberService.findMemberById(id)
+        );
+    }
+
+    @DeleteMapping("/{memberId}")
+    public ResponseEntity deleteMemberById(
+            @PathVariable("memberId") Long id
+    ) {
+        memberService.deleteMemberById(id);
+
+        return ResponseEntity.noContent()
+                .build();
     }
 }
