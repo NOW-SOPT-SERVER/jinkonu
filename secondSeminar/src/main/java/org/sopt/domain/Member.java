@@ -1,6 +1,7 @@
 package org.sopt.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,11 +15,26 @@ public class Member {
     private Long id;
 
     private String name;
+    private int age;
 
     @Enumerated(EnumType.STRING)
     private Part part;
 
-    private int age;
+
+    public static Member create(String name, Part part, int age) {
+        return Member.builder()
+                .name(name)
+                .part(part)
+                .age(age)
+                .build();
+    }
+
+    @Builder
+    public Member(String name, Part part, int age) {
+        this.name = name;
+        this.part = part;
+        this.age = age;
+    }
 
     public enum Part {
         SERVER

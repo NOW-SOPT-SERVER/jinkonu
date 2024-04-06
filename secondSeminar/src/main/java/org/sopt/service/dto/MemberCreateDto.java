@@ -1,4 +1,10 @@
 package org.sopt.service.dto;
 
-public record MemberCreateDto() {
+import org.sopt.domain.Member;
+
+public record MemberCreateDto(
+        String name,
+        Member.Part part,
+        int age
+) {
 }

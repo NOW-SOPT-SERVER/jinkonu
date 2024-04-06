@@ -22,6 +22,8 @@ public class MemberController {
     public ResponseEntity postMember(
             @RequestBody MemberCreateDto memberCreate
     ) {
-        return ResponseEntity.created(URI.create(memberService.createMember(memberCreate))).build();
+        return ResponseEntity.created(
+                URI.create(memberService.createMember(memberCreate))
+        ).build();
     }
 }
