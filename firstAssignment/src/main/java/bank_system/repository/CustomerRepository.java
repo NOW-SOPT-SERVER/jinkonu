@@ -2,7 +2,6 @@ package bank_system.repository;
 
 import bank_system.domain.Account;
 import bank_system.domain.Customer;
-import bank_system.utils.validate.Validator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,8 +12,6 @@ public class CustomerRepository {
     private static final Map<String, Customer> customers = new HashMap<>();
 
     public static Customer join(String id, String password) {
-        Validator.validateJoin(id, password);
-
         Account account = AccountRepository.create();
         Customer customer = Customer.create(password, account);
 
