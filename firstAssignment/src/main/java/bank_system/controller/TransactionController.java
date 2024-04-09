@@ -2,8 +2,8 @@ package bank_system.controller;
 
 import bank_system.domain.Account;
 import bank_system.domain.Transaction;
-import bank_system.io.InputController;
-import bank_system.io.OutputController;
+import bank_system.io.InputView;
+import bank_system.io.OutputView;
 import bank_system.repository.AccountRepository;
 import bank_system.repository.TransactionRepository;
 import bank_system.utils.exception.NoSuchAccountException;
@@ -19,7 +19,7 @@ public class TransactionController {
     private static final String TRANSFER_COMPLETED = "송금이 완료되었습니다.";
 
     public static String deposit(Account account) {
-        Long amount = InputController.readMoney();
+        Long amount = InputView.readMoney();
 
         TransactionRepository.deposit(account, amount);
 
@@ -27,13 +27,13 @@ public class TransactionController {
     }
 
     public static String withdraw(Account account) {
-        Long amount = InputController.readMoney();
+        Long amount = InputView.readMoney();
 
         try {
             TransactionRepository.withdraw(account, amount);
             return WITHDRAW_COMPLETED;
         } catch (ShortMoneyException e) {
-            OutputController.writeErrorMessageOf(e);
+            OutputView.writeErrorMessageOf(e);
 
             return withdraw(account);
         }
@@ -41,13 +41,13 @@ public class TransactionController {
 
     public static String transfer(Account account) {
         Account toAccount = findAccount();
-        Long amount = InputController.readMoney();
+        Long amount = InputView.readMoney();
 
         try {
             TransactionRepository.transfer(account, toAccount, amount);
             return TRANSFER_COMPLETED;
         } catch (ShortMoneyException e) {
-            OutputController.writeErrorMessageOf(e);
+            OutputView.writeErrorMessageOf(e);
 
             return withdraw(account);
         }
@@ -55,10 +55,10 @@ public class TransactionController {
 
     private static Account findAccount() {
         try {
-            String accountId = InputController.readAccountNumber();
+            String accountId = InputView.readAccountNumber();
             return AccountRepository.findBy(accountId).orElseThrow();
         } catch (NoSuchAccountException e) {
-            OutputController.writeErrorMessageOf(e);
+            OutputView.writeErrorMessageOf(e);
 
             return findAccount();
         }

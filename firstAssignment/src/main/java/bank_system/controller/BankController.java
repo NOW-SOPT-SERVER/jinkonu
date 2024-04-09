@@ -4,8 +4,8 @@ import bank_system.utils.dto.AuthResult;
 import bank_system.controller.command.AuthorizedCommand;
 import bank_system.controller.command.UnauthorizedCommand;
 import bank_system.domain.Customer;
-import bank_system.io.InputController;
-import bank_system.io.OutputController;
+import bank_system.io.InputView;
+import bank_system.io.OutputView;
 
 public class BankController {
 
@@ -19,22 +19,22 @@ public class BankController {
     }
 
     private static void welcome() {
-        OutputController.writeln(WELCOME_MESSAGE);
+        OutputView.writeln(WELCOME_MESSAGE);
     }
 
     private static Customer authorize() {
-        UnauthorizedCommand unauthorizedCommand = InputController.readUnauthorizedCommand();
+        UnauthorizedCommand unauthorizedCommand = InputView.readUnauthorizedCommand();
         AuthResult result = unauthorizedCommand.operate();
 
-        OutputController.writeOperationResult(result.message());
+        OutputView.writeOperationResult(result.message());
         return result.customer();
     }
 
     private static void executeCommandOf(Customer customer) {
-        AuthorizedCommand authorizedCommand = InputController.readAuthorizedCommand();
+        AuthorizedCommand authorizedCommand = InputView.readAuthorizedCommand();
         String result = authorizedCommand.operate(customer.getAccount());
 
-        OutputController.writeOperationResult(result);
+        OutputView.writeOperationResult(result);
         if (authorizedCommand.isNotFinished()) executeCommandOf(customer);
     }
 }
