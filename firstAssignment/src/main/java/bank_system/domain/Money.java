@@ -1,5 +1,7 @@
 package bank_system.domain;
 
+import bank_system.utils.exception.ShortMoneyException;
+
 public class Money {
 
     private static final Long INITIAL_MONEY = 0L;
@@ -30,6 +32,8 @@ public class Money {
     }
 
     public Money subtract(Long amount) {
+        if (this.amount < amount) throw new ShortMoneyException();
+
         return new Money(this.amount - amount);
     }
 }

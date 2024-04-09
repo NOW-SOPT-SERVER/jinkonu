@@ -1,26 +1,21 @@
 package bank_system.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Customer {
 
-    private String name;
-    private String password;
-    private List<Account> accounts;
+    private final String password;
+    private final Account account;
 
-    private Customer(String name, String password) {
-        this.name = name;
+    private Customer(String password, Account account) {
         this.password = password;
-        this.accounts = new ArrayList<>();
+        this.account = account;
     }
 
-    public static Customer create(String name, String password) {
-        return new Customer(name, password);
+    public static Customer create(String password, Account account) {
+        return new Customer(password, account);
     }
 
-    public void addAccount(Account account) {
-        accounts.add(account);
+    public Account getAccount() {
+        return account;
     }
 
     public boolean canAccessWith(String password) {
