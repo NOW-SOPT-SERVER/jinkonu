@@ -4,12 +4,14 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.sopt.domain.Member;
 import org.sopt.dto.request.MemberCreateRequest;
+import org.sopt.dto.response.MemberGetAllResponse;
 import org.sopt.dto.response.MemberGetResponse;
 import org.sopt.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -48,9 +50,11 @@ public class MemberService {
     /*
     * !구현과제!
     * */
-    public List<MemberGetResponse> findMembers() {
-        return memberRepository.findAllByOrderByCreatedAtAsc().stream()
+    public MemberGetAllResponse findMembers() {
+        List<MemberGetResponse> memberDtos = memberRepository.findAllByOrderByCreatedAtAsc().stream()
                 .map(MemberGetResponse::of)
                 .toList();
+
+        return MemberGetAllResponse.of(memberDtos.size(), memberDtos);
     }
 }
