@@ -1,4 +1,4 @@
-package org.sopt.dto.response;
+package org.sopt.common.dto.response;
 
 import org.sopt.domain.Member;
 import org.sopt.domain.Part;

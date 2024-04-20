@@ -5,15 +5,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Getter
 @NoArgsConstructor
-public class Member {
+public class Member extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -23,23 +20,19 @@ public class Member {
 
     private int age;
 
-    private LocalDateTime createdAt;
-
 
     public static Member create(String name, Part part, int age) {
         return Member.builder()
                 .name(name)
                 .part(part)
                 .age(age)
-                .createdAt(LocalDateTime.now())
                 .build();
     }
 
     @Builder
-    public Member(int age, Part part, String name, LocalDateTime createdAt) {
+    public Member(int age, Part part, String name) {
         this.age = age;
         this.part = part;
         this.name = name;
-        this.createdAt = createdAt;
     }
 }

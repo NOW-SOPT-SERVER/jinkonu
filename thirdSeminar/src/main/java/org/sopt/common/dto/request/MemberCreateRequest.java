@@ -1,4 +1,4 @@
-package org.sopt.dto.request;
+package org.sopt.common.dto.request;
 
 import org.sopt.domain.Member;
 import org.sopt.domain.Part;
