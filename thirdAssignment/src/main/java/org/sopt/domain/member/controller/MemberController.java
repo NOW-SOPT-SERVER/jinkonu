@@ -1,10 +1,10 @@
-package org.sopt.controller;
+package org.sopt.domain.member.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.sopt.dto.request.MemberCreateRequest;
-import org.sopt.dto.response.MemberGetAllResponse;
-import org.sopt.dto.response.MemberGetResponse;
-import org.sopt.service.MemberService;
+import org.sopt.domain.member.dto.request.MemberCreateRequest;
+import org.sopt.domain.member.dto.response.MemberGetAllResponse;
+import org.sopt.domain.member.dto.response.MemberGetResponse;
+import org.sopt.domain.member.service.MemberService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

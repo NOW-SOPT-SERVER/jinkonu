@@ -5,10 +5,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.sopt.domain.Part;
-import org.sopt.dto.request.MemberCreateRequest;
-import org.sopt.repository.MemberRepository;
-import org.sopt.service.MemberService;
+import org.sopt.domain.member.entity.Part;
+import org.sopt.domain.member.dto.request.MemberCreateRequest;
+import org.sopt.domain.member.repository.MemberRepository;
+import org.sopt.domain.member.service.MemberService;
 import org.sopt.settings.ApiTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,7 @@ import org.springframework.http.MediaType;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.sopt.domain.Part.SERVER;
+import static org.sopt.domain.member.entity.Part.SERVER;
 
 class MemberControllerTest extends ApiTest {
 

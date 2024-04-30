@@ -1,7 +1,7 @@
-package org.sopt.dto.request;
+package org.sopt.domain.member.dto.request;
 
-import org.sopt.domain.Member;
-import org.sopt.domain.Part;
+import org.sopt.domain.member.entity.Member;
+import org.sopt.domain.member.entity.Part;
 
 public record MemberCreateRequest(
         String name,

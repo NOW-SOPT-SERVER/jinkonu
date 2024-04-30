@@ -1,17 +1,16 @@
-package org.sopt.service;
+package org.sopt.domain.member.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.sopt.domain.Member;
-import org.sopt.dto.request.MemberCreateRequest;
-import org.sopt.dto.response.MemberGetAllResponse;
-import org.sopt.dto.response.MemberGetResponse;
-import org.sopt.repository.MemberRepository;
+import org.sopt.domain.member.entity.Member;
+import org.sopt.domain.member.dto.request.MemberCreateRequest;
+import org.sopt.domain.member.dto.response.MemberGetAllResponse;
+import org.sopt.domain.member.dto.response.MemberGetResponse;
+import org.sopt.domain.member.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
