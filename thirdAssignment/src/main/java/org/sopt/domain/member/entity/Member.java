@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.sopt.domain.blog.entity.Blog;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -17,14 +19,14 @@ public class Member {
     private Long id;
 
     private String name;
-
     @Enumerated(EnumType.STRING)
     private Part part;
-
     private int age;
-
     private LocalDateTime createdAt;
+    private UUID token;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    private Blog blog;
 
     public static Member create(String name, Part part, int age) {
         return Member.builder()
@@ -41,5 +43,10 @@ public class Member {
         this.part = part;
         this.name = name;
         this.createdAt = createdAt;
+        this.token = UUID.randomUUID();
+    }
+
+    public boolean matchesToken(String token) {
+        return this.token.toString().equals(token);
     }
 }

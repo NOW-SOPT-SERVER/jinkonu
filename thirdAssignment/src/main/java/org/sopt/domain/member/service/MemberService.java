@@ -2,6 +2,7 @@ package org.sopt.domain.member.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.sopt.domain.member.dto.response.MemberCreateResponse;
 import org.sopt.domain.member.entity.Member;
 import org.sopt.domain.member.dto.request.MemberCreateRequest;
 import org.sopt.domain.member.dto.response.MemberGetAllResponse;
@@ -19,29 +20,32 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public String createMember(
+    public MemberCreateResponse createMember(
             MemberCreateRequest request
     ) {
         Member member = request.toEntity();
         memberRepository.save(member);
 
-        return member.getId().toString();
+        return new MemberCreateResponse(member.getToken().toString());
     }
 
-    public MemberGetResponse findMemberById(
+    public Member findMemberById(
             Long memberId
     ) {
-        return MemberGetResponse.of(memberRepository.findById(memberId)
-                .orElseThrow(() -> new EntityNotFoundException("ID에 해당하는 사용자가 존재하지 않습니다.")));
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 사용자가 존재하지 않습니다."));
+    }
+
+    public boolean matchesToken(Long memberId, String token) {
+        Member member = findMemberById(memberId);
+        return member.matchesToken(token);
     }
 
     @Transactional
     public void deleteMemberById(
             Long memberId
     ) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new EntityNotFoundException("ID에 해당하는 사용자가 존재하지 않습니다."));
-
+        Member member = findMemberById(memberId);
         memberRepository.delete(member);
     }
 
