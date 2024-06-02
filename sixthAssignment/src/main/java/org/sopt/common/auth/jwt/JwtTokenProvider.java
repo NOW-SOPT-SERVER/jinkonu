@@ -3,6 +3,7 @@ package org.sopt.common.auth.jwt;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import org.sopt.common.auth.dto.AuthToken;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -23,12 +24,18 @@ public class JwtTokenProvider {
     @Value("${jwt.secret}")
     private String JWT_SECRET;
 
+    public AuthToken issueToken(final Authentication authentication) {
+        return new AuthToken(
+                issueAccessToken(authentication),
+                issueRefreshToken(authentication)
+        );
+    }
 
-    public String issueAccessToken(final Authentication authentication) {
+    private String issueAccessToken(final Authentication authentication) {
         return generateToken(authentication, ACCESS_TOKEN_EXPIRATION_TIME);
     }
 
-    public String issueRefreshToken(final Authentication authentication) {
+    private String issueRefreshToken(final Authentication authentication) {
         return generateToken(authentication, ACCESS_TOKEN_EXPIRATION_TIME);
     }
 

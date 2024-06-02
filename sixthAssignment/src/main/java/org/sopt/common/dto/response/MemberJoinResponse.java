@@ -1,14 +1,17 @@
 package org.sopt.common.dto.response;
 
+import org.sopt.common.auth.dto.AuthToken;
+
 public record MemberJoinResponse(
         String accessToken,
+        String refreshToken,
         String userId
 ) {
 
     public static MemberJoinResponse of(
-            String accessToken,
+            AuthToken token,
             String userId
     ) {
-        return new MemberJoinResponse(accessToken, userId);
+        return new MemberJoinResponse(token.accessToken(), token.refreshToken(), userId);
     }
 }

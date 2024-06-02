@@ -2,6 +2,7 @@ package org.sopt.service;
 
 import lombok.RequiredArgsConstructor;
 import org.sopt.common.auth.UserAuthentication;
+import org.sopt.common.auth.dto.AuthToken;
 import org.sopt.common.dto.request.MemberJoinRequest;
 import org.sopt.common.dto.response.MemberJoinResponse;
 import org.sopt.common.auth.jwt.JwtTokenProvider;
@@ -25,29 +26,19 @@ public class MemberService {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
-    public String createMemberWithoutAuth(
-            MemberCreateRequest request
-    ) {
-        Member member = request.toEntity();
-        memberRepository.save(member);
-
-        return member.getId().toString();
-    }
-
-    @Transactional
     public MemberJoinResponse createMember(
             MemberJoinRequest request
     ) {
         Member member = memberRepository.save(request.toEntity());
-        String accessToken = getToken(member.getId());
+        AuthToken token = getToken(member.getId());
 
-        return MemberJoinResponse.of(accessToken, member.getId().toString());
+        return MemberJoinResponse.of(token, member.getId().toString());
     }
 
-    private String getToken(Long memberId) {
+    private AuthToken getToken(Long memberId) {
         UserAuthentication authentication = UserAuthentication.createUserAuthentication(memberId);
 
-        return jwtTokenProvider.issueAccessToken(authentication);
+        return jwtTokenProvider.issueToken(authentication);
     }
 
     public MemberGetResponse findMemberById(
