@@ -2,19 +2,16 @@ package org.sopt.common.dto.request;
 
 import org.sopt.domain.Blog;
 import org.sopt.domain.Member;
-import org.springframework.web.multipart.MultipartFile;
 
 public record BlogCreateRequest(
         String title,
-        String description,
-        MultipartFile image
+        String description
 ) {
-    public Blog toEntity(Member member, String imageUrl) {
+    public Blog toEntity(Member member) {
         return Blog.builder()
                 .member(member)
                 .title(title)
                 .description(description)
-                .imageUrl(imageUrl)
                 .build();
     }
 }

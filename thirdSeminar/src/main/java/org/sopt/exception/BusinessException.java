@@ -1,7 +1,7 @@
-package org.sopt.common.exception;
+package org.sopt.exception;
 
 import lombok.Getter;
-import org.sopt.common.exception.message.ErrorMessage;
+import org.sopt.exception.message.ErrorMessage;
 
 @Getter
 public class BusinessException extends RuntimeException {

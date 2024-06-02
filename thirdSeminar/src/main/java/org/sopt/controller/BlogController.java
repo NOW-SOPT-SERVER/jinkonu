@@ -2,7 +2,6 @@ package org.sopt.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.sopt.common.auth.PrincipalHandler;
 import org.sopt.common.dto.request.BlogCreateRequest;
 import org.sopt.common.dto.request.BlogUpdateRequest;
 import org.sopt.common.dto.response.BlogGetAllResponse;
@@ -19,13 +18,13 @@ import org.springframework.web.bind.annotation.*;
 public class BlogController {
 
     private final BlogService blogService;
-    private final PrincipalHandler principalHandler;
 
     @PostMapping("/blog")
     public ResponseEntity<SuccessStatusResponse> createBlog(
-            @ModelAttribute BlogCreateRequest request
+            @RequestHeader Long memberId,
+            @RequestBody BlogCreateRequest request
     ) {
-        Long blogId = blogService.createBlog(principalHandler.getUserIdFromPrincipal(), request);
+        Long blogId = blogService.createBlog(memberId, request);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .header("Location", String.valueOf(blogId))
