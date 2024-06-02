@@ -1,13 +1,16 @@
 package org.sopt.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.sopt.common.auth.UserAuthentication;
+import org.sopt.common.dto.request.MemberJoinRequest;
+import org.sopt.common.dto.response.MemberJoinResponse;
+import org.sopt.common.auth.jwt.JwtTokenProvider;
 import org.sopt.domain.Member;
 import org.sopt.common.dto.request.MemberCreateRequest;
 import org.sopt.common.dto.response.MemberGetAllResponse;
 import org.sopt.common.dto.response.MemberGetResponse;
-import org.sopt.exception.NotFoundException;
-import org.sopt.exception.message.ErrorMessage;
+import org.sopt.common.exception.NotFoundException;
+import org.sopt.common.exception.message.ErrorMessage;
 import org.sopt.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,15 +22,32 @@ import java.util.List;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
-    public String createMember(
+    public String createMemberWithoutAuth(
             MemberCreateRequest request
     ) {
         Member member = request.toEntity();
         memberRepository.save(member);
 
         return member.getId().toString();
+    }
+
+    @Transactional
+    public MemberJoinResponse createMember(
+            MemberJoinRequest request
+    ) {
+        Member member = memberRepository.save(request.toEntity());
+        String accessToken = getToken(member.getId());
+
+        return MemberJoinResponse.of(accessToken, member.getId().toString());
+    }
+
+    private String getToken(Long memberId) {
+        UserAuthentication authentication = UserAuthentication.createUserAuthentication(memberId);
+
+        return jwtTokenProvider.issueAccessToken(authentication);
     }
 
     public MemberGetResponse findMemberById(

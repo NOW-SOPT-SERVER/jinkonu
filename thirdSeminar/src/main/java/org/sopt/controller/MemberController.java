@@ -1,14 +1,14 @@
 package org.sopt.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.sopt.common.dto.request.MemberCreateRequest;
+import org.sopt.common.dto.request.MemberJoinRequest;
 import org.sopt.common.dto.response.MemberGetAllResponse;
 import org.sopt.common.dto.response.MemberGetResponse;
+import org.sopt.common.dto.response.MemberJoinResponse;
 import org.sopt.service.MemberService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,11 +18,14 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping
-    public ResponseEntity createMember(
-            @RequestBody MemberCreateRequest request
+    public ResponseEntity<MemberJoinResponse> postMember(
+            @RequestBody MemberJoinRequest request
     ) {
-        return ResponseEntity.created(URI.create(memberService.createMember(request)))
-                .build();
+        MemberJoinResponse memberJoinResponse = memberService.createMember(request);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .header("Location", memberJoinResponse.userId())
+                .body(memberJoinResponse);
     }
 
     @GetMapping("/{memberId}")

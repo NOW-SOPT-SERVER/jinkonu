@@ -6,23 +6,36 @@ import org.sopt.common.dto.request.BlogUpdateRequest;
 import org.sopt.common.dto.response.BlogGetAllResponse;
 import org.sopt.domain.Blog;
 import org.sopt.domain.Member;
-import org.sopt.exception.NotFoundException;
-import org.sopt.exception.message.ErrorMessage;
+import org.sopt.common.exception.NotFoundException;
+import org.sopt.common.exception.message.ErrorMessage;
 import org.sopt.repository.BlogRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RequiredArgsConstructor
 @Service
 public class BlogService {
 
+    private static final String BLOG_S3_UPLOAD_FOLDER = "blog/";
+
     private final BlogRepository blogRepository;
     private final MemberService memberService;
+    private final S3Service s3Service;
 
     public Long createBlog(Long memberId, BlogCreateRequest request) {
+        String imageUrl;
         Member member = memberService.findById(memberId);
 
-        return blogRepository.save(request.toEntity(member))
+        try {
+            imageUrl = s3Service.uploadImage(BLOG_S3_UPLOAD_FOLDER, request.image());
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        return blogRepository.save(request.toEntity(member, imageUrl))
                 .getId();
     }
 

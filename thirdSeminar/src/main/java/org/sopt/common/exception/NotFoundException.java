@@ -1,6 +1,6 @@
-package org.sopt.exception;
+package org.sopt.common.exception;
 
-import org.sopt.exception.message.ErrorMessage;
+import org.sopt.common.exception.message.ErrorMessage;
 
 public class NotFoundException extends BusinessException {
 
