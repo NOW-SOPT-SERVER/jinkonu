@@ -24,12 +24,14 @@ public class Blog extends BaseEntity {
     private String title;
 
     private String description;
+    private String imageUrl;
 
     @Builder
-    private Blog(String description, Member member, String title) {
+    private Blog(String description, Member member, String title, String imageUrl) {
         this.description = description;
         this.member = member;
         this.title = title;
+        this.imageUrl = imageUrl;
     }
 
     private void updateTitle(String newTitle) {
