@@ -1,6 +1,6 @@
 package org.sopt.common.dto.response;
 
-import org.sopt.common.auth.dto.AuthToken;
+import org.sopt.common.auth.dto.AuthTokenSet;
 
 public record MemberJoinResponse(
         String accessToken,
@@ -9,7 +9,7 @@ public record MemberJoinResponse(
 ) {
 
     public static MemberJoinResponse of(
-            AuthToken token,
+            AuthTokenSet token,
             String userId
     ) {
         return new MemberJoinResponse(token.accessToken(), token.refreshToken(), userId);

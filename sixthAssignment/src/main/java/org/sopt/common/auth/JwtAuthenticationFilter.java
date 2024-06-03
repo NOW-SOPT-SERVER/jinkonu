@@ -35,7 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             final String token = getJwtFromRequest(request);
 
             if (jwtTokenProvider.validateToken(token) == VALID_JWT) {
-                Long memberId = jwtTokenProvider.getUserFromJwt(token);
+                Long memberId = jwtTokenProvider.getMemberIdFromToken(token);
                 setAuthentication(request, memberId);
             }
         } catch (Exception exception) {

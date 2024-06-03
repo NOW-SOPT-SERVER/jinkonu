@@ -5,10 +5,13 @@ import org.sopt.common.dto.request.MemberJoinRequest;
 import org.sopt.common.dto.response.MemberGetAllResponse;
 import org.sopt.common.dto.response.MemberGetResponse;
 import org.sopt.common.dto.response.MemberJoinResponse;
+import org.sopt.common.dto.response.MemberTokenRefreshResponse;
 import org.sopt.service.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,11 +31,20 @@ public class MemberController {
                 .body(memberJoinResponse);
     }
 
+    @GetMapping("/refresh")
+    public ResponseEntity<MemberTokenRefreshResponse> refreshAccessToken(
+            @RequestHeader("Authorization") String refreshToken
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(memberService.refreshAccessToken(refreshToken));
+    }
+
     @GetMapping("/{memberId}")
     public ResponseEntity<MemberGetResponse> findMemberById(
             @PathVariable Long memberId
     ) {
-        return ResponseEntity.ok(memberService.findMemberById(memberId));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(MemberGetResponse.of(memberService.findById(memberId)));
     }
 
     @DeleteMapping("/{memberId}")
