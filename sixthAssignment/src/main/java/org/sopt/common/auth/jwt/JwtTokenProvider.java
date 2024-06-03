@@ -3,6 +3,9 @@ package org.sopt.common.auth.jwt;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import org.sopt.common.auth.UserAuthentication;
+import org.sopt.common.auth.dto.AuthTokenSet;
+import org.sopt.common.auth.redis.service.TokenService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -16,36 +19,45 @@ import java.util.Date;
 public class JwtTokenProvider {
 
     private static final String USER_ID = "userId";
-
     private static final Long ACCESS_TOKEN_EXPIRATION_TIME = 24 * 60 * 60 * 1000L * 14;
     private static final Long REFRESH_TOKEN_EXPIRATION_TIME = 24 * 60 * 60 * 1000L * 14;
 
+    private final TokenService tokenService;
     @Value("${jwt.secret}")
     private String JWT_SECRET;
 
+    public String issueToken(Long memberId, AuthTokenSet.Type type) {
+        Authentication authentication = UserAuthentication.createUserAuthentication(memberId);
 
-    public String issueAccessToken(final Authentication authentication) {
-        return generateToken(authentication, ACCESS_TOKEN_EXPIRATION_TIME);
+        if (type == AuthTokenSet.Type.ACCESS_TOKEN)
+            return generateToken(authentication, ACCESS_TOKEN_EXPIRATION_TIME);
+
+        String refreshToken = generateToken(authentication, REFRESH_TOKEN_EXPIRATION_TIME);
+        tokenService.save(memberId, refreshToken);
+
+        return refreshToken;
     }
-
-    public String issueRefreshToken(final Authentication authentication) {
-        return generateToken(authentication, ACCESS_TOKEN_EXPIRATION_TIME);
-    }
-
 
     public String generateToken(Authentication authentication, Long tokenExpirationTime) {
-        final Date now = new Date();
-        final Claims claims = Jwts.claims()
-                .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + tokenExpirationTime));      // 만료 시간
-
-        claims.put(USER_ID, authentication.getPrincipal());
+        Claims claims = generateClaims(authentication, tokenExpirationTime);
 
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE) // Header
                 .setClaims(claims) // Claim
                 .signWith(getSigningKey()) // Signature
                 .compact();
+    }
+
+    private Claims generateClaims(Authentication authentication, Long tokenExpirationTime) {
+        final Date now = new Date();
+
+        final Claims claims = Jwts.claims()
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + tokenExpirationTime));      // 만료 시간
+
+        claims.put(USER_ID, authentication.getPrincipal());
+
+        return claims;
     }
 
     private SecretKey getSigningKey() {
@@ -77,7 +89,7 @@ public class JwtTokenProvider {
                 .getBody();
     }
 
-    public Long getUserFromJwt(String token) {
+    public Long getMemberIdFromToken(String token) {
         Claims claims = getBody(token);
         return Long.valueOf(claims.get(USER_ID).toString());
     }
